@@ -10,7 +10,7 @@ namespace TaskManager
     { 
         public string TaskName { get; set; }
         public int TaskId { get; set; }
-        public float RAM { get; set; }
-        public float CPU { get; set; }
+        public double RAM { get; set; }
+        public double CPU { get; set; }
     }
 }

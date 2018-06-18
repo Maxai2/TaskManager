@@ -10,31 +10,25 @@
 	<Grid Grid.Row="0">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="3*"/>
-			<RowDefinition Height="0.5*"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<ListBox Grid.Row="0" Margin="10" ItemsSource="{Binding Tasks}">
+		<DataGrid Grid.Row="0" Margin="10" ItemsSource="{Binding Tasks}" IsReadOnly="True" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Auto" SelectionMode="Single" SelectedItem="{Binding SelectedTask}">
 
-			<ListBox.ContextMenu> 
+			<DataGrid.ContextMenu> 
 				<ContextMenu>
 					<MenuItem Header="Kill" Click="MenuItem_Click"/>
 				</ContextMenu>
-			</ListBox.ContextMenu>
+			</DataGrid.ContextMenu>
 
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<UniformGrid Rows="1">
-						
-						<Label Content="{Binding TaskName}"/>
-						<Label Content="{Binding TaskId}"/>
-						<Label Content="{Binding RAM}"/>
-						<Label Content="{Binding CPU}"/>	
-						
-					</UniformGrid>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Name" Width="*" Binding="{Binding TaskName}"/>
+				<DataGridTextColumn Header="Id" Width="*" Binding="{Binding TaskId}"/>
+				<DataGridTextColumn Header="RAM" Width="*" Binding="{Binding StringFormat={}{0} MB, Path=RAM}"/>
+				<DataGridTextColumn Header="CPU" Width="*" Binding="{Binding CPU}"/>
+			</DataGrid.Columns>
 
-		</ListBox>
+		</DataGrid>
 
 		<Grid Grid.Row="1">
 			<Grid.ColumnDefinitions>
@@ -42,8 +36,8 @@
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
 
-			<TextBox Grid.Column="0" Margin="10"/>
-			<Button Grid.Column="1" Content="Add" Margin="20 10"/>
+			<TextBox Name="NewTaskName" Grid.Column="0" Margin="10" VerticalAlignment="Center"/>
+			<Button Grid.Column="1" Content="Add" Margin="20 10" Click="Button_Click"/>
 		</Grid>
 
 	</Grid>

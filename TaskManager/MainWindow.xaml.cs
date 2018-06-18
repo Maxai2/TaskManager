@@ -26,6 +26,9 @@ namespace TaskManager
     {
         public static ObservableCollection<Task> Tasks { get; set; }
 
+
+        public Task SelectedTask { get; set; }
+
         private static Timer aTimer;
 
         public MainWindow()
@@ -36,7 +39,7 @@ namespace TaskManager
 
             Tasks = new ObservableCollection<Task>();
 
-            RefreshTaskList();
+            FillTasks();
 
             aTimer = new Timer();
             aTimer.Interval = 5000;
@@ -55,32 +58,21 @@ namespace TaskManager
 
             Dispatcher.Invoke(() =>
             {
-                foreach (var item in Process.GetProcesses())
-                {
-                    Task task = new Task()
-                    {
-                        TaskName = item.ProcessName,
-                        TaskId = item.Id,
-                        RAM = item.WorkingSet64
-                    };
-
-                    Tasks.Add(task);
-                }
+                FillTasks();
             });
 
         }
 
-        void RefreshTaskList()
+        void FillTasks()
         {
-            Tasks.Clear();
-
-            foreach (var item in Process.GetProcesses())
+            foreach (var item in Process.GetProcesses().OrderBy(f => f.ProcessName))
             {
                 Task task = new Task()
                 {
                     TaskName = item.ProcessName,
                     TaskId = item.Id,
-                    RAM = item.WorkingSet64
+                    RAM = Convert.ToDouble(item.WorkingSet64) / 1024.0,
+                    CPU = 100.0 / Convert.ToDouble(Process.GetProcesses().Length)
                 };
 
                 Tasks.Add(task);
@@ -89,7 +81,30 @@ namespace TaskManager
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                var proc = Process.GetProcessById(SelectedTask.TaskId);
 
+                proc.Kill();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                throw;
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Process.Start(NewTaskName.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                throw;
+            }
         }
     }
 }
