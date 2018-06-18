@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TaskManager
 {
     public class Task
-    {
+    { 
         public string TaskName { get; set; }
         public int TaskId { get; set; }
         public float RAM { get; set; }

@@ -15,7 +15,7 @@
 
 		<ListBox Grid.Row="0" Margin="10" ItemsSource="{Binding Tasks}">
 
-			<ListBox.ContextMenu>
+			<ListBox.ContextMenu> 
 				<ContextMenu>
 					<MenuItem Header="Kill" Click="MenuItem_Click"/>
 				</ContextMenu>
