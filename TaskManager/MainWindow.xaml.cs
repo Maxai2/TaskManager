@@ -35,6 +35,8 @@ namespace TaskManager
         {
             InitializeComponent();
 
+            AddProc.Focus();
+
             DataContext = this;
 
             Tasks = new ObservableCollection<Task>();
@@ -43,7 +45,7 @@ namespace TaskManager
 
             aTimer = new Timer();
             aTimer.Interval = 5000;
-             
+
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
@@ -51,7 +53,7 @@ namespace TaskManager
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            Dispatcher.Invoke(() => 
+            Dispatcher.Invoke(() =>
             {
                 Tasks.Clear();
             });
@@ -65,18 +67,46 @@ namespace TaskManager
 
         void FillTasks()
         {
-            foreach (var item in Process.GetProcesses().OrderBy(f => f.ProcessName))
-            {
-                Task task = new Task()
-                {
-                    TaskName = item.ProcessName,
-                    TaskId = item.Id,
-                    RAM = Convert.ToDouble(item.WorkingSet64) / 1024.0,
-                    CPU = 100.0 / Convert.ToDouble(Process.GetProcesses().Length)
-                };
+            double procTime = GetTotalProcTime();
 
-                Tasks.Add(task);
+            try
+            {
+                foreach (var item in Process.GetProcesses().OrderBy(f => f.ProcessName))
+                {
+                    Task task = new Task()
+                    {
+                        TaskName = item.ProcessName,
+                        TaskId = item.Id,
+                        RAM = Convert.ToDouble(item.WorkingSet64) / 1024.0,
+                        CPU = (100.0 * procTime) / item.TotalProcessorTime.Ticks
+                    };
+
+                    Tasks.Add(task);
+                }
             }
+            catch (Exception)
+            {
+                // MessageBox.Show(ex.Message);
+            }
+        }
+
+        double GetTotalProcTime()
+        {
+            double procTime = 0.0;
+
+            foreach (var item in Process.GetProcesses())
+            {
+                try
+                {
+                    procTime += item.TotalProcessorTime.Ticks;
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+
+            return procTime;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -87,10 +117,9 @@ namespace TaskManager
 
                 proc.Kill();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
-                throw;
+                //MessageBox.Show(ex.Message);
             }
         }
 
@@ -103,7 +132,6 @@ namespace TaskManager
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                throw;
             }
         }
     }

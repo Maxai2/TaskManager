@@ -4,8 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManager"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        mc:Ignorable="d" Title="MainWindow" Height="450" Width="800">
+	
+	<!--<Window.InputBindings>
+		<KeyBinding Command="{Binding Button_Click}" Key="Enter"/>
+	</Window.InputBindings>-->
 
 	<Grid Grid.Row="0">
 		<Grid.RowDefinitions>
@@ -15,7 +18,7 @@
 
 		<DataGrid Grid.Row="0" Margin="10" ItemsSource="{Binding Tasks}" IsReadOnly="True" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Auto" SelectionMode="Single" SelectedItem="{Binding SelectedTask}">
 
-			<DataGrid.ContextMenu> 
+			<DataGrid.ContextMenu>
 				<ContextMenu>
 					<MenuItem Header="Kill" Click="MenuItem_Click"/>
 				</ContextMenu>
@@ -25,7 +28,7 @@
 				<DataGridTextColumn Header="Name" Width="*" Binding="{Binding TaskName}"/>
 				<DataGridTextColumn Header="Id" Width="*" Binding="{Binding TaskId}"/>
 				<DataGridTextColumn Header="RAM" Width="*" Binding="{Binding StringFormat={}{0} MB, Path=RAM}"/>
-				<DataGridTextColumn Header="CPU" Width="*" Binding="{Binding CPU}"/>
+				<DataGridTextColumn Header="CPU" Width="*" Binding="{Binding CPU, StringFormat={}{0} %}"/>
 			</DataGrid.Columns>
 
 		</DataGrid>
@@ -37,7 +40,7 @@
 			</Grid.ColumnDefinitions>
 
 			<TextBox Name="NewTaskName" Grid.Column="0" Margin="10" VerticalAlignment="Center"/>
-			<Button Grid.Column="1" Content="Add" Margin="20 10" Click="Button_Click"/>
+			<Button Name="AddProc" Grid.Column="1" Content="Add" Margin="20 10" Click="Button_Click"/>
 		</Grid>
 
 	</Grid>
