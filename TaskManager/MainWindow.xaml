@@ -28,7 +28,7 @@
 				<DataGridTextColumn Header="Name" Width="*" Binding="{Binding TaskName}"/>
 				<DataGridTextColumn Header="Id" Width="*" Binding="{Binding TaskId}"/>
 				<DataGridTextColumn Header="RAM" Width="*" Binding="{Binding StringFormat={}{0} MB, Path=RAM}"/>
-				<DataGridTextColumn Header="CPU" Width="*" Binding="{Binding CPU, StringFormat={}{0} %}"/>
+				<DataGridTextColumn Header="CPU" Width="*" Binding="{Binding CPU, StringFormat={}{0:0.00}%}"/>
 			</DataGrid.Columns>
 
 		</DataGrid>

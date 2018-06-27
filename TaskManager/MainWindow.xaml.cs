@@ -69,24 +69,24 @@ namespace TaskManager
         {
             double procTime = GetTotalProcTime();
 
-            try
+            foreach (var item in Process.GetProcesses().OrderBy(f => f.ProcessName))
             {
-                foreach (var item in Process.GetProcesses().OrderBy(f => f.ProcessName))
+                try
                 {
                     Task task = new Task()
                     {
                         TaskName = item.ProcessName,
                         TaskId = item.Id,
                         RAM = Convert.ToDouble(item.WorkingSet64) / 1024.0,
-                        CPU = (100.0 * procTime) / item.TotalProcessorTime.Ticks
+                        CPU = (item.TotalProcessorTime.Ticks / procTime) * 100.0
                     };
 
                     Tasks.Add(task);
                 }
-            }
-            catch (Exception)
-            {
-                // MessageBox.Show(ex.Message);
+                catch (Exception)
+                {
+                    // MessageBox.Show(ex.Message);
+                }
             }
         }
 
